@@ -1,48 +1,47 @@
- 
 const svg = document.getElementById("drawingPad");
+const resetBtn = document.getElementById("resetBtn");
 
- 
 let isDrawing = false;
 let points = [];
 let currentLine = null;
 
- 
+// Start drawing
 svg.addEventListener("mousedown", function (event) {
-    isDrawing = true;
+  isDrawing = true;
+  points = [];
+  points.push(`${event.offsetX},${event.offsetY}`);
 
-    
-    points = [];
-    points.push(`${event.offsetX},${event.offsetY}`);
+  currentLine = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "polyline"
+  );
 
-    
-    currentLine = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "polyline"
-    );
- 
-    currentLine.setAttribute("stroke", "black");
-    currentLine.setAttribute("stroke-width", "2");
-    currentLine.setAttribute("fill", "none");
-    currentLine.setAttribute("points", points.join(" "));
+  currentLine.setAttribute("stroke", "black");
+  currentLine.setAttribute("stroke-width", "2");
+  currentLine.setAttribute("fill", "none");
+  currentLine.setAttribute("points", points.join(" "));
 
-    
-    svg.appendChild(currentLine);
+  svg.appendChild(currentLine);
 });
 
- 
+// Draw while moving
 svg.addEventListener("mousemove", function (event) {
-    if (!isDrawing) return;
+  if (!isDrawing) return;
 
-    points.push(`${event.offsetX},${event.offsetY}`);
-    currentLine.setAttribute("points", points.join(" "));
+  points.push(`${event.offsetX},${event.offsetY}`);
+  currentLine.setAttribute("points", points.join(" "));
 });
 
- 
+// Stop drawing
 svg.addEventListener("mouseup", function () {
-    isDrawing = false;
+  isDrawing = false;
 });
 
- 
 svg.addEventListener("mouseleave", function () {
-    isDrawing = false;
+  isDrawing = false;
+});
+
+// Reset button
+resetBtn.addEventListener("click", function () {
+  svg.innerHTML = "";
 });
